@@ -107,11 +107,11 @@ const SignUp = () => {
               </>
             )}
             <Input name="email" label="Email Address" handleChange={handleChange} type="email" />
-            <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? 'text' : 'password'} handleShowPassword={handleShowPassword} />
+            <Input  name="password" autocomplete="current-password" handleChange={handleChange} type={showPassword ? 'text' : 'password'} handleShowPassword={handleShowPassword} />
             {isSignup && (
               <Input
                 name="confirmPassword"
-                label="Repeat Password"
+                label="Confirm Password"
                 handleChange={handleChange}
                 type="password"
               />
