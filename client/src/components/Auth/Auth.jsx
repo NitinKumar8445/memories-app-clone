@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Input from './input';
+import Input from './Input';
 
 import { Avatar, Button, Paper, Grid, Typography, Container } from '@mui/material';
 import { loginSuccess } from '../../reducers/authSlice';
