@@ -107,6 +107,7 @@ const Form = ({ currentId, setCurrentId }) => {
     <Paper sx={{ p: 2, margin: '8px' }}>
       <Box
         component="form"
+        label="form"
         autoComplete="off"
         noValidate
         onSubmit={handleSubmit}
@@ -121,16 +122,7 @@ const Form = ({ currentId, setCurrentId }) => {
           {currentId ? `Editing "${post?.title}"` : 'Creating a Memory'}
         </Typography>
 
-        {/* <TextField
-          name="creator"
-          variant="outlined"
-          label="Creator"
-          fullWidth
-          value={postData.creator}
-          onChange={(e) =>
-            setPostData({ ...postData, creator: e.target.value })
-          }
-        /> */}
+    
         <TextField
           name="title"
           variant="outlined"
@@ -165,7 +157,7 @@ const Form = ({ currentId, setCurrentId }) => {
         />
 
         <Box sx={{ width: '97%', margin: '10px 0' }}>
-          <input type="file" accept="image/*" onChange={handleFileUpload} />
+          <input label="image Input" type="file" accept="image/*" onChange={handleFileUpload} />
         </Box>
 
         <Button

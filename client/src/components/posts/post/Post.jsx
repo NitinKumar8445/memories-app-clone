@@ -7,7 +7,9 @@ import {
   Button,
   Typography,
   Box,
+  Tooltip,
 } from '@mui/material';
+
 import {
   ThumbUpAltRounded,
   ThumbUpAltOutlined,
@@ -22,7 +24,7 @@ const Post = ({ post, setCurrentId }) => {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('profile'));
 
- 
+
   const Likes = () => {
     if (post.likes.length > 0) {
       return post.likes.find((like) => like === (user?.result?.googleId || user?.result?._id))
@@ -90,6 +92,7 @@ const Post = ({ post, setCurrentId }) => {
       <CardMedia
         image={post.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'}
         title={post.title}
+
         sx={{
           paddingTop: '56.25%',
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -132,6 +135,7 @@ const Post = ({ post, setCurrentId }) => {
 
       {/* Overlay - Edit Button */}
       <Box
+
         sx={{
           display: 'flex',
           position: 'absolute',
@@ -141,22 +145,23 @@ const Post = ({ post, setCurrentId }) => {
         }}
       >
         {(user?.result?.sub === post?.creator || user?.result?._id === post?.creator) && (
-          <Button
-            sx={{
-              color: 'white',
-              minWidth: { xs: '32px', sm: '40px' },
-              padding: { xs: '4px', sm: '8px' },
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              }
-            }}
-            size="small"
-            onClick={() => setCurrentId(post._id)}
-          >
-            <MoreHorizIcon
-              fontSize={window.innerWidth < 600 ? "small" : "default"}
-            />
-          </Button>
+          <Tooltip title="Edit post" arrow>
+            <Button
+              aria-label="Edit post"
+              sx={{
+                color: 'white',
+                minWidth: { xs: '32px', sm: '40px' },
+                padding: { xs: '4px', sm: '8px' },
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                }
+              }}
+              size="small"
+              onClick={() => setCurrentId(post._id)}
+            >
+              <MoreHorizIcon fontSize={window.innerWidth < 600 ? "small" : "default"} />
+            </Button>
+          </Tooltip>
         )}
       </Box>
 
