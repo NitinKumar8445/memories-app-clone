@@ -8,6 +8,7 @@ import {
   Typography,
   Box,
   Tooltip,
+  ButtonBase,
 } from '@mui/material';
 
 import {
@@ -19,11 +20,13 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { deletePost, likePost } from '../../../reducers/postSlice.js';
-
+import { useNavigate } from 'react-router-dom';
 const Post = ({ post, setCurrentId }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('profile'));
 
+  
 
   const Likes = () => {
     if (post.likes.length > 0) {
@@ -50,7 +53,9 @@ const Post = ({ post, setCurrentId }) => {
       </>
     );
   };
-
+  const openPost = () => {
+    navigate(`/posts/${post._id}`);
+  };
   return (
     <Card
       sx={{
@@ -60,16 +65,11 @@ const Post = ({ post, setCurrentId }) => {
         borderRadius: { xs: '12px', sm: '15px' },
         position: 'relative',
         width: '100%',
-        maxWidth: {
-          xs: '94%',      // full width on mobile
-          sm: '94%',  // 2 cards per row on small screens
-          md: '100%', // 3 cards per row on medium screens
-          lg: '350px',     // fixed max width for large screens
-          xl: '350px',     // slightly larger on extra large screens
-        },
+
         minHeight: {
           xs: '380px',     // minimum height on mobile
-          sm: '450px',     // slightly taller on larger screens
+          sm: '410px',     // slightly taller on larger screens
+          lg: '450px',
 
         },
         margin: {
@@ -89,155 +89,171 @@ const Post = ({ post, setCurrentId }) => {
         },
       }}
     >
-      <CardMedia
-        image={post.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'}
-        title={post.title}
-
+      <ButtonBase
+        component="div"
+        role="button"
+        tabIndex={0}
+        onClick={openPost}
         sx={{
-          paddingTop: '56.25%',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          backgroundBlendMode: 'darken',
-          border: 'solid',
-          height: '100%',
-        }}
-      />
-
-      {/* Overlay - Author and Date */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: { xs: 12, sm: 16, md: 20 },
-          left: { xs: 12, sm: 16, md: 20 },
-          color: 'white',
-          textShadow: '1px 1px 2px rgba(0,0,0,0.7)',
+          display: 'block',
+          width: '100%',
+          textAlign: 'left',
+          '&:hover': {
+            cursor: 'pointer',
+          }
         }}
       >
-        <Typography
-          variant="h6"
+
+        <CardMedia
+          image={post.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'}
+          title={post.title}
+
           sx={{
-            fontSize: { xs: '0.9rem', sm: '1rem', md: '1.25rem' },
+            paddingTop: '56.25%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            backgroundBlendMode: 'darken',
+            border: 'solid',
+            height: '100%',
+          }}
+        />
+
+        {/* Overlay - Author and Date */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: { xs: 12, sm: 16, md: 20 },
+            left: { xs: 12, sm: 16, md: 20 },
+            color: 'white',
+            textShadow: '1px 1px 2px rgba(0,0,0,0.7)',
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              fontSize: { xs: '0.9rem', sm: '1rem', md: '1.25rem' },
+              fontWeight: 600,
+              lineHeight: 1.2,
+            }}
+          >
+            {post.name}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.875rem' },
+              opacity: 0.9,
+            }}
+          >
+            {moment(post.createdAt).fromNow()}
+          </Typography>
+        </Box>
+
+        {/* Overlay - Edit Button */}
+        <Box
+
+          sx={{
+            display: 'flex',
+            position: 'absolute',
+            top: { xs: 8, sm: 12, md: 16 },
+            right: { xs: 4, sm: 8, md: 12 },
+            color: 'white',
+          }}
+        >
+          {(user?.result?.sub === post?.creator || user?.result?._id === post?.creator) && (
+            <Tooltip title="Edit post" arrow>
+              <Button
+                aria-label="Edit post"
+                sx={{
+                  color: 'white',
+                  minWidth: { xs: '32px', sm: '40px' },
+                  padding: { xs: '4px', sm: '8px' },
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  }
+                }}
+                size="small"
+                onClick={() => setCurrentId(post._id)}
+              >
+                <MoreHorizIcon fontSize={window.innerWidth < 600 ? "small" : "default"} />
+              </Button>
+            </Tooltip>
+          )}
+        </Box>
+
+        {/* Tags */}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            margin: { xs: '12px 16px 8px', sm: '16px 20px 12px' },
+            flexWrap: 'wrap',
+            gap: '4px',
+          }}
+        >
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="div"
+            sx={{
+              fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.875rem' },
+              lineHeight: 1.4,
+            }}
+          >
+            {post.tags.map((tag, index) => (
+              <span key={index} style={{ marginRight: '6px' }}>
+                #{tag}
+              </span>
+            ))}
+          </Typography>
+        </Box>
+
+        {/* Title */}
+        <Typography
+          gutterBottom
+          variant="h5"
+          component="h2"
+          sx={{
+            padding: { xs: '0 16px', sm: '0 20px' },
+            fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' },
             fontWeight: 600,
-            lineHeight: 1.2,
-          }}
-        >
-          {post.name}
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{
-            fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.875rem' },
-            opacity: 0.9,
-          }}
-        >
-          {moment(post.createdAt).fromNow()}
-        </Typography>
-      </Box>
-
-      {/* Overlay - Edit Button */}
-      <Box
-
-        sx={{
-          display: 'flex',
-          position: 'absolute',
-          top: { xs: 8, sm: 12, md: 16 },
-          right: { xs: 4, sm: 8, md: 12 },
-          color: 'white',
-        }}
-      >
-        {(user?.result?.sub === post?.creator || user?.result?._id === post?.creator) && (
-          <Tooltip title="Edit post" arrow>
-            <Button
-              aria-label="Edit post"
-              sx={{
-                color: 'white',
-                minWidth: { xs: '32px', sm: '40px' },
-                padding: { xs: '4px', sm: '8px' },
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                }
-              }}
-              size="small"
-              onClick={() => setCurrentId(post._id)}
-            >
-              <MoreHorizIcon fontSize={window.innerWidth < 600 ? "small" : "default"} />
-            </Button>
-          </Tooltip>
-        )}
-      </Box>
-
-      {/* Tags */}
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          margin: { xs: '12px 16px 8px', sm: '16px 20px 12px' },
-          flexWrap: 'wrap',
-          gap: '4px',
-        }}
-      >
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          component="div"
-          sx={{
-            fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.875rem' },
-            lineHeight: 1.4,
-          }}
-        >
-          {post.tags.map((tag, index) => (
-            <span key={index} style={{ marginRight: '6px' }}>
-              #{tag}
-            </span>
-          ))}
-        </Typography>
-      </Box>
-
-      {/* Title */}
-      <Typography
-        gutterBottom
-        variant="h5"
-        component="h2"
-        sx={{
-          padding: { xs: '0 16px', sm: '0 20px' },
-          fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' },
-          fontWeight: 600,
-          lineHeight: 1.3,
-          display: '-webkit-box',
-          WebkitLineClamp: { xs: 2, sm: 3 },
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-        }}
-      >
-        {post.title}
-      </Typography>
-
-      {/* Message */}
-      <CardContent
-        sx={{
-          padding: { xs: '8px 16px', sm: '12px 20px' },
-          paddingTop: 0,
-          flex: 1,
-        }}
-      >
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          component="p"
-          sx={{
-            fontSize: { xs: '0.8rem', sm: '0.875rem' },
-            lineHeight: 1.5,
+            lineHeight: 1.3,
             display: '-webkit-box',
-            WebkitLineClamp: { xs: 3, sm: 4 },
+            WebkitLineClamp: { xs: 2, sm: 3 },
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
           }}
         >
-          {post.message}
+          {post.title}
         </Typography>
-      </CardContent>
 
+        {/* Message */}
+        <CardContent
+          sx={{
+            padding: { xs: '8px 16px', sm: '12px 20px' },
+            paddingTop: 0,
+            flex: 1,
+          }}
+        >
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            sx={{
+              fontSize: { xs: '0.8rem', sm: '0.875rem' },
+              lineHeight: 1.5,
+              display: '-webkit-box',
+              WebkitLineClamp: { xs: 3, sm: 4 },
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {post.message}
+          </Typography>
+        </CardContent>
+      </ButtonBase>
+      {/* -------------------------------------------------------------------------------------------------------------------------------- */}
       {/* Actions */}
       <CardActions
         sx={{

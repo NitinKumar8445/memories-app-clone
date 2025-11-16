@@ -5,31 +5,34 @@ import { Grid } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 const Posts = ({ setCurrentId }) => {
-  const posts = useSelector((state) => state.posts);
+  const {posts,isLoading}  = useSelector((state) => state.posts);
 
+  if(!posts?.length && !isLoading) return 'No posts found';
   return (
-    !posts.length ? (
+    isLoading ? (
       <CircularProgress />
     ) : (
       <Grid
         sx={{
           
-         
+         minWidth: '100%',
           justifyContent: {
             xs: 'center',
             sm: 'normal'
           }
         }}
         container
-        spacing={3}   // ✅ use spacing instead of margin/columnGap
+        spacing={2}   // ✅ use spacing instead of margin/columnGap
         alignItems="stretch"
       >
-        {posts.map((post) => (
+        {posts?.map((post) => (
           <Grid
             key={post._id}
             size={{
               xs: 12,
-              sm: 6,
+              sm: 12, // ✅ 4 posts per row on small screens
+              md: 6,
+              lg: 3
              
             }}  // ✅ 3 posts per row on medium+, 2 per row on small, full width on xs
           >

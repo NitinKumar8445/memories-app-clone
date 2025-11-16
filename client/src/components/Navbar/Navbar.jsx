@@ -35,10 +35,9 @@ const Navbar = () => {
       position="static"
       color="inherit"
       sx={{
-        width: '100%',
+        width: '96vw',
         borderRadius: 2,
-        mt: 4,
-        mb: 4,
+        mb: 2,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',

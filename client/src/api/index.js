@@ -16,7 +16,9 @@ API.interceptors.request.use((req) => {
 });
 
 // Remove the hardcoded localhost URL - use relative paths with baseURL
-export const getPosts = () => API.get('/api/posts');
+export const fetchPost = (id) => API.get(`/api/posts/${id}`);
+export const getPosts = (page) => API.get(`/api/posts?page=${page}`);
+export const getPostsBySearch = (searchQuery) => API.get(`/api/posts/search?searchQuery=${searchQuery.search || 'none'}&tags=${searchQuery.tags}`);
 export const createPost = (newPost) => API.post('/api/posts', newPost);
 export const updatePost = (id, updatePost) => API.patch(`/api/posts/${id}`, updatePost);
 export const likePost = (id) => API.patch(`/api/posts/${id}/likePost`);

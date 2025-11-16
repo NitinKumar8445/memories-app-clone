@@ -27,7 +27,7 @@ export const signin = async (req, res) => {
 
     // jwt sign syntax : jwt.sign(payload, secretOrPrivateKey, [options, callback])
     const jwtToken = jwt.sign(
-      { email: user.email, id: user._id },
+      { email: user.email, id: user._id, name: user.name },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -57,7 +57,7 @@ export const signup = async (req, res) => {
       name: `${firstName} ${lastName}`
     });
 
-    const token = jwt.sign({ email: result.email, id: result._id }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ email: result.email, id: result._id, name: result.name }, JWT_SECRET, { expiresIn: "1h" });
 
     res.status(201).json({ result, token });
   } catch (error) {
